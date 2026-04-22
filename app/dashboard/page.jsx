@@ -1,17 +1,56 @@
 "use client";
 
 import Link from "next/link";
-import { Terminal, BarChart2, ArrowRight, Sparkles } from "lucide-react";
+import { Sparkles, Database, Clock, BarChart2, ArrowRight } from "lucide-react";
 import { PageTransition } from "../components/PageTransition";
 
 export default function DashboardScreen() {
   const modules = [
     {
-      id: "python",
-      name: "Python",
+      id: "try-yourself",
+      name: "Try Yourself",
       description:
-        "Upload your Python project scripts and datasets for intelligent analysis.",
-      icon: Terminal,
+        "Engage with hands-on exercises, interactive challenges, and test your skills in a sandbox environment.",
+      icon: Sparkles,
+      gradientFrom: "from-purple-400",
+      gradientTo: "to-indigo-500",
+      bgGradient: "from-purple-500/10 via-indigo-500/5 to-transparent",
+      iconBg: "bg-gradient-to-br from-purple-500/20 to-indigo-600/20",
+      borderHover: "group-hover:border-purple-500/40",
+      shadowGlow: "group-hover:shadow-purple-500/20",
+    },
+    {
+      id: "query-management-system",
+      name: "Query Management System",
+      description:
+        "Organize, track, and resolve queries efficiently with intelligent prioritization and smart routing.",
+      icon: Database,
+      gradientFrom: "from-blue-400",
+      gradientTo: "to-cyan-500",
+      bgGradient: "from-blue-500/10 via-cyan-500/5 to-transparent",
+      iconBg: "bg-gradient-to-br from-blue-500/20 to-cyan-600/20",
+      borderHover: "group-hover:border-blue-500/40",
+      shadowGlow: "group-hover:shadow-blue-500/20",
+    },
+    {
+      id: "time-management",
+      name: "Time Management",
+      description:
+        "Optimize your schedule, track productivity, and master time-blocking techniques with smart analytics.",
+      icon: Clock,
+      gradientFrom: "from-rose-400",
+      gradientTo: "to-pink-500",
+      bgGradient: "from-rose-500/10 via-pink-500/5 to-transparent",
+      iconBg: "bg-gradient-to-br from-rose-500/20 to-pink-600/20",
+      borderHover: "group-hover:border-rose-500/40",
+      shadowGlow: "group-hover:shadow-rose-500/20",
+    },
+    {
+      id: "data-analyst",
+      name: "Data Analyst",
+      description:
+        "Upload datasets, generate deep insights, and visualize trends with powerful analytical tools.",
+      icon: BarChart2,
       gradientFrom: "from-emerald-400",
       gradientTo: "to-teal-500",
       bgGradient: "from-emerald-500/10 via-teal-500/5 to-transparent",
@@ -19,26 +58,13 @@ export default function DashboardScreen() {
       borderHover: "group-hover:border-emerald-500/40",
       shadowGlow: "group-hover:shadow-emerald-500/20",
     },
-    {
-      id: "power-bi",
-      name: "Power BI",
-      description:
-        "Submit your Power BI reports and raw data for comprehensive insights.",
-      icon: BarChart2,
-      gradientFrom: "from-amber-400",
-      gradientTo: "to-orange-500",
-      bgGradient: "from-amber-500/10 via-orange-500/5 to-transparent",
-      iconBg: "bg-gradient-to-br from-amber-500/20 to-orange-600/20",
-      borderHover: "group-hover:border-amber-500/40",
-      shadowGlow: "group-hover:shadow-amber-500/20",
-    },
   ];
 
   return (
     <PageTransition className="relative min-h-screen pt-12 pb-8 overflow-hidden">
       {/* Animated gradient background */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-black to-black" />
-        <div className="absolute top-0 -left-1/2 w-[200%] h-[200%] bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.03)_0%,_transparent_50%)] animate-pulse-slow" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-black to-black" />
+      <div className="absolute top-0 -left-1/2 w-[200%] h-[200%] bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.03)_0%,_transparent_50%)] animate-pulse-slow" />
 
       <div className="relative z-10 space-y-12 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header with animated gradient text */}
@@ -46,7 +72,7 @@ export default function DashboardScreen() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mx-auto mb-4">
             <Sparkles size={14} className="text-amber-400" />
             <span className="text-xs font-medium text-zinc-300 tracking-wide">
-              Intelligent Analysis Ready
+              Intelligent Tools Ready
             </span>
           </div>
           <h1 className="text-5xl lg:text-6xl font-bold tracking-tight">
@@ -54,17 +80,17 @@ export default function DashboardScreen() {
               Select a
             </span>
             <br />
-            <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-amber-400 bg-clip-text text-transparent animate-gradient">
-              Processing Module
+            <span className="bg-gradient-to-r from-purple-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent animate-gradient">
+              Smart Module
             </span>
           </h1>
           <p className="text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-            Choose your environment. Each module is purpose‑built to extract
-            deep insights from your specific file types and datasets.
+            Choose your focus area. Each module is purpose‑built to help you
+            master skills, manage workflows, or unlock data insights.
           </p>
         </div>
 
-        {/* Cards Grid - Enhanced */}
+        {/* Cards Grid - 2x2 layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
           {modules.map((mod) => {
             const Icon = mod.icon;
@@ -73,7 +99,7 @@ export default function DashboardScreen() {
                 key={mod.id}
                 href={`/upload/${mod.id}`}
                 prefetch={true}
-                aria-label={`Navigate to ${mod.name} upload page`}
+                aria-label={`Navigate to ${mod.name} module`}
                 className="group block h-full focus:outline-none perspective-1000"
               >
                 <div
@@ -99,10 +125,7 @@ export default function DashboardScreen() {
                     <div
                       className={`inline-flex h-20 w-20 items-center justify-center rounded-2xl ${mod.iconBg} backdrop-blur-sm border border-white/10 group-hover:scale-110 transition-transform duration-300 group-hover:shadow-lg`}
                     >
-                      <Icon
-                        size={36}
-                        className={``}
-                      />
+                      <Icon size={36} />
                     </div>
 
                     {/* Title & Description */}
@@ -118,7 +141,7 @@ export default function DashboardScreen() {
                     </div>
                   </div>
 
-                  {/* Call to action with better animation */}
+                  {/* Call to action with animation */}
                   <div className="relative z-10 mt-12 flex items-center text-sm font-semibold text-zinc-400 group-hover:text-white transition-all duration-300">
                     <span>Launch Module</span>
                     <ArrowRight
@@ -148,7 +171,7 @@ export default function DashboardScreen() {
         </div>
       </div>
 
-      {/* Add custom keyframes for animations */}
+      {/* Custom keyframes for animations */}
       <style jsx global>{`
         @keyframes gradient {
           0% { background-position: 0% 50%; }

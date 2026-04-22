@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Mail, User, CreditCard, Phone, Users } from "lucide-react";
 import { PageTransition } from "./components/PageTransition";
+import axios from "axios";
 
 export default function EntryScreen() {
   const router = useRouter();
@@ -12,8 +13,8 @@ export default function EntryScreen() {
     name: "",
     email: "",
     cnic: "",
-    fatherName: "",
-    contact: "",
+    phone: "",
+    password: "",
   });
 
   const handleChange = (e) => {
@@ -23,24 +24,31 @@ export default function EntryScreen() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, cnic, fatherName, contact } = formData;
 
-    // Basic validation
-    if   (!name || !email || !cnic || !fatherName || !contact) {
+    const { name, email, cnic, phone, password } = formData;
+
+    // validation
+    if (!name || !email || !cnic || !phone || !password) {
       alert("Please fill in all fields.");
       return;
     }
 
-    setIsSubmitting(true);
+    const rollNumber = Math.floor(Math.random() * 1000000);
 
-    // Simulate API call or save data
     try {
-      // await saveUserData(formData);
+      setIsSubmitting(true);
+
+      const res = await axios.post("http://localhost:8000/api/auth/register", {
+        ...formData,
+        rollNumber,
+      });
+
       router.push("/dashboard");
     } catch (error) {
       console.error(error);
-      setIsSubmitting(false);
       alert("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -87,28 +95,6 @@ export default function EntryScreen() {
               />
             </div>
 
-            {/* Father Name Field - NEW */}
-            <div className="relative">
-              <label htmlFor="fatherName" className="sr-only">
-                Father's Name
-              </label>
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-500">
-                <Users size={18} />
-              </div>
-              <input
-                id="fatherName"
-                type="text"
-                required
-                autoComplete="additional-name"
-                className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl py-3 pl-11 pr-4
-                           text-white placeholder-zinc-500 focus:outline-none focus:ring-2
-                           focus:ring-brand-500/50 focus:border-brand-500 transition-all"
-                placeholder="Father's Name"
-                value={formData.fatherName}
-                onChange={handleChange}
-              />
-            </div>
-
             {/* CNIC Field - NEW */}
             <div className="relative">
               <label htmlFor="cnic" className="sr-only">
@@ -140,27 +126,27 @@ export default function EntryScreen() {
 
             {/* Contact Field - NEW */}
             <div className="relative">
-              <label htmlFor="contact" className="sr-only">
+              <label htmlFor="phone" className="sr-only">
                 Contact Number
               </label>
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-500">
                 <Phone size={18} />
               </div>
               <input
-                id="contact"
+                id="phone"
                 type="tel"
                 required
                 placeholder="Mobile (e.g., 03001234567)"
                 className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl py-3 pl-11 pr-4
                            text-white placeholder-zinc-500 focus:outline-none focus:ring-2
                            focus:ring-brand-500/50 focus:border-brand-500 transition-all"
-                value={formData.contact}
+                value={formData.phone}
                 onChange={handleChange}
                 onBlur={(e) => {
                   const raw = e.target.value.replace(/\D/g, "");
                   if (raw.length === 11 && raw.startsWith("03")) {
                     const formatted = `${raw.slice(0, 4)}-${raw.slice(4)}`;
-                    setFormData((prev) => ({ ...prev, contact: formatted }));
+                    setFormData((prev) => ({ ...prev, phone: formatted }));
                   }
                 }}
               />
@@ -184,6 +170,26 @@ export default function EntryScreen() {
                            focus:ring-brand-500/50 focus:border-brand-500 transition-all"
                 placeholder="Email Address"
                 value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="relative">
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-500">
+                <User size={18} />
+              </div>
+              <input
+                id="password"
+                type="password"
+                required
+                autoComplete="password"
+                className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl py-3 pl-11 pr-4
+                           text-white placeholder-zinc-500 focus:outline-none focus:ring-2
+                           focus:ring-brand-500/50 focus:border-brand-500 transition-all"
+                placeholder="Password"
+                value={formData.password}
                 onChange={handleChange}
               />
             </div>
