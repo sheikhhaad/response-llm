@@ -38,7 +38,7 @@ export default function EntryScreen() {
     try {
       setIsSubmitting(true);
 
-      const res = await axios.post("http://localhost:8000/api/auth/register", {
+      const res = await axios.post("https://stu-portal-backend.vercel.app/api/auth/register", {
         ...formData,
         rollNumber,
       });
