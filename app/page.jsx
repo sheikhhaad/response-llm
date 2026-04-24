@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, Mail, User, CreditCard, Phone, Users } from "lucide-react";
 import { PageTransition } from "./components/PageTransition";
 import axios from "axios";
+import api from "@/lib/api";
 
 export default function EntryScreen() {
   const router = useRouter();
@@ -38,7 +39,7 @@ export default function EntryScreen() {
     try {
       setIsSubmitting(true);
 
-      const res = await axios.post("https://stu-portal-backend.vercel.app/api/auth/register", {
+      const res = await api.post("/auth/register", {
         ...formData,
         rollNumber,
       });

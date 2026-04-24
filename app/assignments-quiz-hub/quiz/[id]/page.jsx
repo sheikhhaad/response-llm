@@ -178,7 +178,7 @@ const QuizPage = () => {
                   Take Again
                 </button>
                 <button
-                  onClick={() => window.location.href = '/'}
+                  onClick={() => window.location.href = '/assignments-quiz-hub'}
                   className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
                 >
                   Back to Hub
