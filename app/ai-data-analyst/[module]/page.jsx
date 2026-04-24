@@ -116,7 +116,7 @@ export default function UploadScreen() {
           timestamp: new Date().toISOString(),
         })
       );
-      router.push(`/result`);
+      router.push(`/ai-data-analyst/result`);
     }, processingSteps.length * 1200 + 1000);
   };
 
@@ -450,7 +450,7 @@ function FileUploadCard({
 
   const colorConfig = {
     brand: { border: "border-brand-500/50", bg: "bg-brand-500/20", text: "text-brand-400", glow: "shadow-[0_0_40px_rgba(20,184,166,0.2)]", dragGlow: "shadow-[0_0_60px_rgba(20,184,166,0.4)]" },
-    emerald: { border: "border-yellow-500/50", bg: "bg-yellow-500/20", text: "text-yellow-400", glow: "shadow-[0_0_40px_rgba(16,185,129,0.2)]", dragGlow: "shadow-[0_0_60px_rgba(16,185,129,0.4)]" },
+    emerald: { border: "border-emerald-500/50", bg: "bg-emerald-500/20", text: "text-emerald-400", glow: "shadow-[0_0_40px_rgba(16,185,129,0.2)]", dragGlow: "shadow-[0_0_60px_rgba(16,185,129,0.4)]" },
     amber: { border: "border-amber-500/50", bg: "bg-amber-500/20", text: "text-amber-400", glow: "shadow-[0_0_40px_rgba(245,158,11,0.2)]", dragGlow: "shadow-[0_0_60px_rgba(245,158,11,0.4)]" },
     sky: { border: "border-sky-500/50", bg: "bg-sky-500/20", text: "text-sky-400", glow: "shadow-[0_0_40px_rgba(14,165,233,0.2)]", dragGlow: "shadow-[0_0_60px_rgba(14,165,233,0.4)]" },
   };

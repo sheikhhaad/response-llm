@@ -1,64 +1,68 @@
 "use client";
 
 import Link from "next/link";
-import { Sparkles, Database, Clock, BarChart2, ArrowRight } from "lucide-react";
+import { Sparkles, Database, Clock, BarChart2, ArrowRight, BookOpen,MessageCircle } from "lucide-react";
 import { PageTransition } from "../components/PageTransition";
 
 export default function DashboardScreen() {
-  const modules = [
-    {
-      id: "try-yourself",
-      name: "Try Yourself",
-      description:
-        "Engage with hands-on exercises, interactive challenges, and test your skills in a sandbox environment.",
-      icon: Sparkles,
-      gradientFrom: "from-purple-400",
-      gradientTo: "to-indigo-500",
-      bgGradient: "from-purple-500/10 via-indigo-500/5 to-transparent",
-      iconBg: "bg-gradient-to-br from-purple-500/20 to-indigo-600/20",
-      borderHover: "group-hover:border-purple-500/40",
-      shadowGlow: "group-hover:shadow-purple-500/20",
-    },
-    {
-      id: "query-management-system",
-      name: "Query Management System",
-      description:
-        "Organize, track, and resolve queries efficiently with intelligent prioritization and smart routing.",
-      icon: Database,
-      gradientFrom: "from-blue-400",
-      gradientTo: "to-cyan-500",
-      bgGradient: "from-blue-500/10 via-cyan-500/5 to-transparent",
-      iconBg: "bg-gradient-to-br from-blue-500/20 to-cyan-600/20",
-      borderHover: "group-hover:border-blue-500/40",
-      shadowGlow: "group-hover:shadow-blue-500/20",
-    },
-    {
-      id: "time-management",
-      name: "Time Management",
-      description:
-        "Optimize your schedule, track productivity, and master time-blocking techniques with smart analytics.",
-      icon: Clock,
-      gradientFrom: "from-rose-400",
-      gradientTo: "to-pink-500",
-      bgGradient: "from-rose-500/10 via-pink-500/5 to-transparent",
-      iconBg: "bg-gradient-to-br from-rose-500/20 to-pink-600/20",
-      borderHover: "group-hover:border-rose-500/40",
-      shadowGlow: "group-hover:shadow-rose-500/20",
-    },
-    {
-      id: "data-analyst",
-      name: "Data Analyst",
-      description:
-        "Upload datasets, generate deep insights, and visualize trends with powerful analytical tools.",
-      icon: BarChart2,
-      gradientFrom: "from-emerald-400",
-      gradientTo: "to-teal-500",
-      bgGradient: "from-emerald-500/10 via-teal-500/5 to-transparent",
-      iconBg: "bg-gradient-to-br from-emerald-500/20 to-teal-600/20",
-      borderHover: "group-hover:border-emerald-500/40",
-      shadowGlow: "group-hover:shadow-emerald-500/20",
-    },
-  ];
+ const modules = [
+  {
+    id: "assignments-quiz-hub",
+    name: "Assignments & Quiz Hub",
+    description:
+      "Access assignments, download PDFs, and take quizzes to test your knowledge in one place.",
+    icon: BookOpen,
+    gradientFrom: "from-purple-400",
+    gradientTo: "to-indigo-500",
+    bgGradient: "from-purple-500/10 via-indigo-500/5 to-transparent",
+    iconBg: "bg-gradient-to-br from-purple-500/20 to-indigo-600/20",
+    borderHover: "group-hover:border-purple-500/40",
+    shadowGlow: "group-hover:shadow-purple-500/20",
+    path:"/assignments-quiz-hub",
+  },
+  {
+    id: "student-query-portal",
+    name: "Student Query Portal",
+    description:
+      "Ask questions, chat in real time, and track your queries in a dedicated support portal.",
+    icon: MessageCircle,
+    gradientFrom: "from-blue-400",
+    gradientTo: "to-cyan-500",
+    bgGradient: "from-blue-500/10 via-cyan-500/5 to-transparent",
+    iconBg: "bg-gradient-to-br from-blue-500/20 to-cyan-600/20",
+    borderHover: "group-hover:border-blue-500/40",
+    shadowGlow: "group-hover:shadow-blue-500/20",
+    path:"https://stu-portal-frontend.vercel.app",
+  },
+  {
+    id: "time-management",
+    name: "Time Management",
+    description:
+      "Optimize your schedule, track productivity, and manage your daily tasks effectively.",
+    icon: Clock,
+    gradientFrom: "from-rose-400",
+    gradientTo: "to-pink-500",
+    bgGradient: "from-rose-500/10 via-pink-500/5 to-transparent",
+    iconBg: "bg-gradient-to-br from-rose-500/20 to-pink-600/20",
+    borderHover: "group-hover:border-rose-500/40",
+    shadowGlow: "group-hover:shadow-rose-500/20",
+    path:"/time-management",
+  },
+  {
+    id: "ai-data-analyst",
+    name: "AI Data Analyst",
+    description:
+      "Upload dataset, PDF, and response file. Generate structured output and insights using AI.",
+    icon: BarChart2,
+    gradientFrom: "from-emerald-400",
+    gradientTo: "to-teal-500",
+    bgGradient: "from-emerald-500/10 via-teal-500/5 to-transparent",
+    iconBg: "bg-gradient-to-br from-emerald-500/20 to-teal-600/20",
+    borderHover: "group-hover:border-emerald-500/40",
+    shadowGlow: "group-hover:shadow-emerald-500/20",
+    path:"/ai-data-analyst/",
+  },
+];
 
   return (
     <PageTransition className="relative min-h-screen pt-12 pb-8 overflow-hidden">
@@ -97,7 +101,7 @@ export default function DashboardScreen() {
             return (
               <Link
                 key={mod.id}
-                href={`/upload/${mod.id}`}
+                href={`${mod.path}`}
                 prefetch={true}
                 aria-label={`Navigate to ${mod.name} module`}
                 className="group block h-full focus:outline-none perspective-1000"
