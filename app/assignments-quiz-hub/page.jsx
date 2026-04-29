@@ -1,98 +1,140 @@
 "use client";
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
+import { useAssignment } from "../Context/Assignment";
+import { useQuiz } from "../Context/Quiz";
+import { BookOpen, FileCode, FileText, Calendar, ArrowRight } from "lucide-react";
 
 const Page = () => {
-  const assignments = [
-    {
-      id: 1,
-      title: "React Fundamentals",
-      description: "Complete exercises on React hooks, components, and state management"
-    },
-    {
-      id: 2,
-      title: "Python Data Structures",
-      description: "Implement lists, dictionaries, and tuples with practical examples"
-    },
-    {
-      id: 3,
-      title: "Database Design",
-      description: "Create ER diagrams and write SQL queries for a library system"
-    },
-    {
-      id: 4,
-      title: "UI/UX Principles",
-      description: "Design a user interface following modern UX guidelines"
-    }
-  ];
-
-  const quizzes = [
-    { id: 1, title: "JavaScript Basics" },
-    { id: 2, title: "Python Programming" },
-    { id: 3, title: "SQL Fundamentals" },
-    { id: 4, title: "React & Modern JS" }
-  ];
+  const { assignment } = useAssignment();
+  const { quiz } = useQuiz();
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
-        {/* Header Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-200 mb-2">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4 bg-clip-text text-transparent bg-gradient-to-r from-brand-400 to-brand-600">
             Assignments & Quizzes
           </h1>
-          <p className="text-gray-200 text-lg">
-            Browse your tasks and test your knowledge
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            Access your learning materials, practice coding, and take quizzes to test your knowledge.
           </p>
         </div>
 
-        {/* Assignments Section */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-200 mb-6">Assignments</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {assignments.map((assignment) => (
-              <Link
-                key={assignment.id}
-                href={`/assignments-quiz-hub/assignment/${assignment.id}`}
-                className="block bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6 cursor-pointer border border-gray-100 hover:border-gray-200"
-              >
-                <h3 className="font-semibold text-gray-800 text-lg mb-2">
-                  {assignment.title}
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  {assignment.description}
-                </p>
-              </Link>
-            ))}
+        {/* ================= ASSIGNMENTS ================= */}
+        <section className="mb-16">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-2 bg-brand-500/10 rounded-lg">
+              <FileText className="w-6 h-6 text-brand-500" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground">
+              Assignments
+            </h2>
           </div>
-        </div>
 
-        {/* Quizzes Section */}
-        <div>
-          <h2 className="text-2xl font-bold text-gray-200 mb-6">Quizzes</h2>
+          {/* Empty state */}
+          {(!assignment || assignment.length === 0) && (
+            <div className="glass-card rounded-2xl p-12 text-center">
+              <p className="text-muted-foreground italic">No assignments found</p>
+            </div>
+          )}
+
+          {/* Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {quizzes.map((quiz) => (
-              <div
-                key={quiz.id}
-                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6 border border-gray-100 flex flex-col"
-              >
-                <h3 className="font-semibold text-gray-900 text-lg mb-4">
-                  {quiz.title}
-                </h3>
+            {assignment &&
+              assignment.map((a) => (
                 <Link
-                  href={`/assignments-quiz-hub/quiz/${quiz.id}`}
-                  className="inline-flex items-center justify-center px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors w-full"
+                  key={a.id}
+                  href={
+                    a.assignment_type === "coding"
+                      ? `/assignments-quiz-hub/assignment/coding/${a.id}`
+                      : `/assignments-quiz-hub/assignment/pdf/${a.id}`
+                  }
+                  className="group glass-card rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02] hover:border-brand-500/50 flex flex-col"
                 >
-                  Attempt Quiz
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="p-2 bg-brand-500/10 rounded-lg group-hover:bg-brand-500/20 transition-colors">
+                      {a.assignment_type === "coding" ? (
+                        <FileCode className="w-5 h-5 text-brand-500" />
+                      ) : (
+                        <FileText className="w-5 h-5 text-brand-500" />
+                      )}
+                    </div>
+                    <span className="text-[10px] uppercase tracking-wider font-semibold px-2 py-1 rounded bg-brand-500/10 text-brand-400 border border-brand-500/20">
+                      {a.assignment_type}
+                    </span>
+                  </div>
+
+                  <h3 className="font-bold text-foreground text-xl mb-2 group-hover:text-brand-400 transition-colors">
+                    {a.title}
+                  </h3>
+
+                  <div className="mt-auto pt-4 flex items-center justify-between text-muted-foreground">
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <Calendar className="w-3.5 h-3.5" />
+                      {new Date(a.created_at).toLocaleDateString()}
+                    </div>
+                    <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform text-brand-500" />
+                  </div>
                 </Link>
-              </div>
-            ))}
+              ))}
           </div>
-        </div>
+        </section>
+
+        {/* ================= QUIZZES ================= */}
+        <section>
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-2 bg-brand-500/10 rounded-lg">
+              <BookOpen className="w-6 h-6 text-brand-500" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground">
+              Quizzes
+            </h2>
+          </div>
+
+          {/* Empty state */}
+          {(!quiz || quiz.length === 0) && (
+            <div className="glass-card rounded-2xl p-12 text-center">
+              <p className="text-muted-foreground italic">No quizzes found</p>
+            </div>
+          )}
+
+          {/* Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {quiz &&
+              quiz.map((q) => (
+                <Link
+                  key={q.id}
+                  href={`/assignments-quiz-hub/quiz/${q.id}`}
+                  className="group glass-card rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02] hover:border-brand-500/50 flex flex-col"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="p-2 bg-brand-500/10 rounded-lg group-hover:bg-brand-500/20 transition-colors">
+                      <BookOpen className="w-5 h-5 text-brand-500" />
+                    </div>
+                  </div>
+
+                  <h3 className="font-bold text-foreground text-xl mb-2 group-hover:text-brand-400 transition-colors">
+                    {q.title}
+                  </h3>
+
+                  <div className="mt-auto pt-4 flex items-center justify-between text-muted-foreground">
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <FileText className="w-3.5 h-3.5" />
+                      {q.questions?.length || 0} Questions
+                    </div>
+                    <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform text-brand-500" />
+                  </div>
+                </Link>
+              ))}
+          </div>
+        </section>
+
       </div>
     </div>
   );
 };
 
-export default Page;
+export default Page;

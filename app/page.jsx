@@ -175,7 +175,7 @@ export default function EntryScreen() {
             </div>
             <div className="relative">
               <label htmlFor="password" className="sr-only">
-                Password
+                Create Password
               </label>
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-500">
                 <User size={18} />
@@ -188,7 +188,7 @@ export default function EntryScreen() {
                 className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl py-3 pl-11 pr-4
                            text-white placeholder-zinc-500 focus:outline-none focus:ring-2
                            focus:ring-brand-500/50 focus:border-brand-500 transition-all"
-                placeholder="Password"
+                placeholder="Create new Password"
                 value={formData.password}
                 onChange={handleChange}
               />
