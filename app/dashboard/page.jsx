@@ -33,6 +33,7 @@ export default function DashboardScreen() {
     borderHover: "group-hover:border-blue-500/40",
     shadowGlow: "group-hover:shadow-blue-500/20",
     path:"https://stu-portal-frontend.vercel.app",
+    _blank:true,
   },
   {
     id: "time-management",
@@ -102,6 +103,7 @@ export default function DashboardScreen() {
               <Link
                 key={mod.id}
                 href={`${mod.path}`}
+                target={mod._blank ? "_blank" : "_self"}
                 prefetch={true}
                 aria-label={`Navigate to ${mod.name} module`}
                 className="group block h-full focus:outline-none perspective-1000"

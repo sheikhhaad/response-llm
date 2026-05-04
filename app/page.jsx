@@ -2,7 +2,14 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Mail, User, CreditCard, Phone, Users } from "lucide-react";
+import {
+  ArrowRight,
+  Mail,
+  User,
+  CreditCard,
+  Phone,
+  CheckSquare,
+} from "lucide-react";
 import { PageTransition } from "./components/PageTransition";
 import axios from "axios";
 import api from "@/lib/api";
@@ -10,6 +17,7 @@ import api from "@/lib/api";
 export default function EntryScreen() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isChecked, setIsChecked] = useState(false); // State for checkbox
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -23,14 +31,26 @@ export default function EntryScreen() {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
+  const handleCheckboxChange = (e) => {
+    setIsChecked(e.target.checked);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const { name, email, cnic, phone, password } = formData;
 
+    // Set shazaib_student based on checkbox
+    const shazaib_student = isChecked;
+
     // validation
     if (!name || !email || !cnic || !phone || !password) {
       alert("Please fill in all fields.");
+      return;
+    }
+
+    if (!shazaib_student) {
+      alert("Please confirm that you are a Shazaib student.");
       return;
     }
 
@@ -42,6 +62,7 @@ export default function EntryScreen() {
       const res = await api.post("/auth/register", {
         ...formData,
         rollNumber,
+        shazaib_student, // Send checkbox value
       });
 
       router.push("/dashboard");
@@ -56,7 +77,6 @@ export default function EntryScreen() {
   return (
     <PageTransition className="justify-center items-center">
       <div
-        // Fallback for undefined glass-card class
         className="w-full max-w-md rounded-2xl p-8 flex flex-col gap-8
                    bg-zinc-900/80 backdrop-blur-sm border border-zinc-800 shadow-xl"
       >
@@ -96,7 +116,7 @@ export default function EntryScreen() {
               />
             </div>
 
-            {/* CNIC Field - NEW */}
+            {/* CNIC Field */}
             <div className="relative">
               <label htmlFor="cnic" className="sr-only">
                 CNIC Number
@@ -114,7 +134,6 @@ export default function EntryScreen() {
                            focus:ring-brand-500/50 focus:border-brand-500 transition-all"
                 value={formData.cnic}
                 onChange={handleChange}
-                // Format on blur (add dashes for readability)
                 onBlur={(e) => {
                   const raw = e.target.value.replace(/\D/g, "");
                   if (raw.length === 13) {
@@ -125,7 +144,7 @@ export default function EntryScreen() {
               />
             </div>
 
-            {/* Contact Field - NEW */}
+            {/* Contact Field */}
             <div className="relative">
               <label htmlFor="phone" className="sr-only">
                 Contact Number
@@ -174,6 +193,8 @@ export default function EntryScreen() {
                 onChange={handleChange}
               />
             </div>
+
+            {/* Password Field */}
             <div className="relative">
               <label htmlFor="password" className="sr-only">
                 Create Password
@@ -185,7 +206,7 @@ export default function EntryScreen() {
                 id="password"
                 type="password"
                 required
-                autoComplete="password"
+                autoComplete="new-password"
                 className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl py-3 pl-11 pr-4
                            text-white placeholder-zinc-500 focus:outline-none focus:ring-2
                            focus:ring-brand-500/50 focus:border-brand-500 transition-all"
@@ -194,11 +215,36 @@ export default function EntryScreen() {
                 onChange={handleChange}
               />
             </div>
+
+            {/* Checkbox Field */}
+            <div className="flex items-start gap-3 pt-2">
+              <div className="relative flex items-center">
+                <input
+                  type="checkbox"
+                  id="shazaib_student"
+                  checked={isChecked}
+                  onChange={handleCheckboxChange}
+                  className="w-5 h-5 rounded border-zinc-600 bg-zinc-800 
+                           text-brand-500 focus:ring-brand-500 focus:ring-2 
+                           focus:ring-offset-0 focus:ring-offset-transparent
+                           cursor-pointer"
+                />
+              </div>
+              <label
+                htmlFor="shazaib_student"
+                className="text-sm text-zinc-300 cursor-pointer select-none"
+              >
+                I confirm that I am a{" "}
+                <span className="text-brand-400 font-semibold">
+                  Shazaib Student
+                </span>
+              </label>
+            </div>
           </div>
 
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !isChecked} // Button disabled until checkbox is checked
             className="w-full py-3 px-4 bg-brand-500 hover:bg-brand-400 text-brand-950
                        font-semibold rounded-xl flex items-center justify-center gap-2
                        transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
