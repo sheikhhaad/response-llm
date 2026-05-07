@@ -1,69 +1,77 @@
 "use client";
 
 import Link from "next/link";
-import { Sparkles, Database, Clock, BarChart2, ArrowRight, BookOpen,MessageCircle } from "lucide-react";
+import {
+  Sparkles,
+  Database,
+  Clock,
+  BarChart2,
+  ArrowRight,
+  BookOpen,
+  MessageCircle,
+} from "lucide-react";
 import { PageTransition } from "../components/PageTransition";
 
 export default function DashboardScreen() {
- const modules = [
-  {
-    id: "assignments-quiz-hub",
-    name: "Assignments & Quiz Hub",
-    description:
-      "Access assignments, download PDFs, and take quizzes to test your knowledge in one place.",
-    icon: BookOpen,
-    gradientFrom: "from-purple-400",
-    gradientTo: "to-indigo-500",
-    bgGradient: "from-purple-500/10 via-indigo-500/5 to-transparent",
-    iconBg: "bg-gradient-to-br from-purple-500/20 to-indigo-600/20",
-    borderHover: "group-hover:border-purple-500/40",
-    shadowGlow: "group-hover:shadow-purple-500/20",
-    path:"/assignments-quiz-hub",
-  },
-  {
-    id: "student-query-portal",
-    name: "Student Query Portal",
-    description:
-      "Ask questions, chat in real time, and track your queries in a dedicated support portal.",
-    icon: MessageCircle,
-    gradientFrom: "from-blue-400",
-    gradientTo: "to-cyan-500",
-    bgGradient: "from-blue-500/10 via-cyan-500/5 to-transparent",
-    iconBg: "bg-gradient-to-br from-blue-500/20 to-cyan-600/20",
-    borderHover: "group-hover:border-blue-500/40",
-    shadowGlow: "group-hover:shadow-blue-500/20",
-    path:"https://stu-portal-frontend.vercel.app",
-    _blank:true,
-  },
-  {
-    id: "time-management",
-    name: "Time Management",
-    description:
-      "Optimize your schedule, track productivity, and manage your daily tasks effectively.",
-    icon: Clock,
-    gradientFrom: "from-rose-400",
-    gradientTo: "to-pink-500",
-    bgGradient: "from-rose-500/10 via-pink-500/5 to-transparent",
-    iconBg: "bg-gradient-to-br from-rose-500/20 to-pink-600/20",
-    borderHover: "group-hover:border-rose-500/40",
-    shadowGlow: "group-hover:shadow-rose-500/20",
-    path:"/time-management",
-  },
-  {
-    id: "ai-data-analyst",
-    name: "AI Data Analyst",
-    description:
-      "Upload dataset, PDF, and response file. Generate structured output and insights using AI.",
-    icon: BarChart2,
-    gradientFrom: "from-emerald-400",
-    gradientTo: "to-teal-500",
-    bgGradient: "from-emerald-500/10 via-teal-500/5 to-transparent",
-    iconBg: "bg-gradient-to-br from-emerald-500/20 to-teal-600/20",
-    borderHover: "group-hover:border-emerald-500/40",
-    shadowGlow: "group-hover:shadow-emerald-500/20",
-    path:"/ai-data-analyst/",
-  },
-];
+  const modules = [
+    {
+      id: "assignments-quiz-hub",
+      name: "Assignments & Quiz Hub",
+      description:
+        "Access assignments, download PDFs, and take quizzes to test your knowledge in one place.",
+      icon: BookOpen,
+      gradientFrom: "from-purple-400",
+      gradientTo: "to-indigo-500",
+      bgGradient: "from-purple-500/10 via-indigo-500/5 to-transparent",
+      iconBg: "bg-gradient-to-br from-purple-500/20 to-indigo-600/20",
+      borderHover: "group-hover:border-purple-500/40",
+      shadowGlow: "group-hover:shadow-purple-500/20",
+      path: "/assignments-quiz-hub",
+    },
+    {
+      id: "student-query-portal",
+      name: "Student Query Portal",
+      description:
+        "Ask questions, chat in real time, and track your queries in a dedicated support portal.",
+      icon: MessageCircle,
+      gradientFrom: "from-blue-400",
+      gradientTo: "to-cyan-500",
+      bgGradient: "from-blue-500/10 via-cyan-500/5 to-transparent",
+      iconBg: "bg-gradient-to-br from-blue-500/20 to-cyan-600/20",
+      borderHover: "group-hover:border-blue-500/40",
+      shadowGlow: "group-hover:shadow-blue-500/20",
+      path: "https://stu-portal-frontend.vercel.app",
+      _blank: true,
+    },
+    {
+      id: "time-management",
+      name: "Time Management",
+      description:
+        "Optimize your schedule, track productivity, and manage your daily tasks effectively.",
+      icon: Clock,
+      gradientFrom: "from-rose-400",
+      gradientTo: "to-pink-500",
+      bgGradient: "from-rose-500/10 via-pink-500/5 to-transparent",
+      iconBg: "bg-gradient-to-br from-rose-500/20 to-pink-600/20",
+      borderHover: "group-hover:border-rose-500/40",
+      shadowGlow: "group-hover:shadow-rose-500/20",
+      path: "/time-management",
+    },
+    {
+      id: "ai-data-analyst",
+      name: "AI Data Analyst",
+      description:
+        "Upload dataset, PDF, and response file. Generate structured output and insights using AI.",
+      icon: BarChart2,
+      gradientFrom: "from-emerald-400",
+      gradientTo: "to-teal-500",
+      bgGradient: "from-emerald-500/10 via-teal-500/5 to-transparent",
+      iconBg: "bg-gradient-to-br from-emerald-500/20 to-teal-600/20",
+      borderHover: "group-hover:border-emerald-500/40",
+      shadowGlow: "group-hover:shadow-emerald-500/20",
+      path: "/ai-data-analyst/",
+    },
+  ];
 
   return (
     <PageTransition className="relative min-h-screen pt-12 pb-8 overflow-hidden">
@@ -180,17 +188,30 @@ export default function DashboardScreen() {
       {/* Custom keyframes for animations */}
       <style jsx global>{`
         @keyframes gradient {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
         }
         .animate-gradient {
           background-size: 200% auto;
           animation: gradient 3s ease infinite;
         }
         @keyframes pulse-slow {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 0.6; transform: scale(1.05); }
+          0%,
+          100% {
+            opacity: 0.3;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.6;
+            transform: scale(1.05);
+          }
         }
         .animate-pulse-slow {
           animation: pulse-slow 8s ease-in-out infinite;

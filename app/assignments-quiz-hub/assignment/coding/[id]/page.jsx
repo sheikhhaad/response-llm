@@ -2,8 +2,15 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import api from "@/app/lib/api";
-import { Play, ChevronLeft, FileCode, Terminal, Loader2, AlertCircle } from "lucide-react";
+import api from "@/app/utils/api";
+import {
+  Play,
+  ChevronLeft,
+  FileCode,
+  Terminal,
+  Loader2,
+  AlertCircle,
+} from "lucide-react";
 
 export default function Page() {
   const { id } = useParams();
@@ -50,9 +57,15 @@ export default function Page() {
         language: "python",
       });
 
-      setOutput(typeof res.data === 'object' ? JSON.stringify(res.data, null, 2) : res.data);
+      setOutput(
+        typeof res.data === "object"
+          ? JSON.stringify(res.data, null, 2)
+          : res.data,
+      );
     } catch (err) {
-      setOutput(err?.response?.data?.detail || err?.message || "Execution Error");
+      setOutput(
+        err?.response?.data?.detail || err?.message || "Execution Error",
+      );
     } finally {
       setRunning(false);
     }
@@ -63,7 +76,9 @@ export default function Page() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-brand-500 animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading assignment environment...</p>
+          <p className="text-muted-foreground">
+            Loading assignment environment...
+          </p>
         </div>
       </div>
     );
@@ -74,8 +89,10 @@ export default function Page() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center glass-card p-12 rounded-2xl max-w-md">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-foreground mb-2">Assignment Not Found</h2>
-          <button 
+          <h2 className="text-2xl font-bold text-foreground mb-2">
+            Assignment Not Found
+          </h2>
+          <button
             onClick={() => router.back()}
             className="mt-6 px-6 py-2 bg-brand-500 text-white rounded-xl hover:bg-brand-600 transition-colors"
           >
@@ -89,9 +106,8 @@ export default function Page() {
   return (
     <div className="min-h-screen py-8">
       <div className="max-w-4xl mx-auto px-4">
-        
         {/* Navigation */}
-        <button 
+        <button
           onClick={() => router.back()}
           className="flex items-center gap-2 text-muted-foreground hover:text-brand-400 transition-colors mb-6 group"
         >
@@ -109,8 +125,12 @@ export default function Page() {
               Coding Assignment
             </span>
           </div>
-          <h1 className="text-3xl font-extrabold text-foreground mb-3">{assignment.title}</h1>
-          <p className="text-muted-foreground text-lg">{assignment.description}</p>
+          <h1 className="text-3xl font-extrabold text-foreground mb-3">
+            {assignment.title}
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            {assignment.description}
+          </p>
         </div>
 
         {/* Editor Section */}
@@ -119,22 +139,30 @@ export default function Page() {
             <div className="px-6 py-3 border-b border-border/50 bg-foreground/5 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <FileCode className="w-4 h-4 text-brand-500" />
-                <span className="text-sm font-bold text-foreground uppercase tracking-tight">main.py</span>
+                <span className="text-sm font-bold text-foreground uppercase tracking-tight">
+                  main.py
+                </span>
               </div>
               <button
                 onClick={handleRun}
                 disabled={running}
                 className="flex items-center gap-2 px-6 py-2 bg-brand-500 text-white text-sm font-bold rounded-lg hover:bg-brand-600 transition-all active:scale-95 disabled:opacity-50"
               >
-                {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4 fill-current" />}
+                {running ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Play className="w-4 h-4 fill-current" />
+                )}
                 {running ? "Running..." : "Run Code"}
               </button>
             </div>
-            
+
             <div className="relative group">
               <div className="absolute left-0 top-0 bottom-0 w-12 bg-foreground/5 border-r border-border/30 flex flex-col items-center pt-4 text-muted-foreground/30 font-mono text-xs select-none">
                 {Array.from({ length: 15 }).map((_, i) => (
-                  <div key={i} className="h-6 leading-6">{i + 1}</div>
+                  <div key={i} className="h-6 leading-6">
+                    {i + 1}
+                  </div>
                 ))}
               </div>
               <textarea
@@ -151,7 +179,9 @@ export default function Page() {
           <div className="glass-card rounded-2xl overflow-hidden border-border/50">
             <div className="px-6 py-3 border-b border-border/50 bg-foreground/5 flex items-center gap-2">
               <Terminal className="w-4 h-4 text-brand-400" />
-              <span className="text-sm font-bold text-foreground uppercase tracking-tight">Output Console</span>
+              <span className="text-sm font-bold text-foreground uppercase tracking-tight">
+                Output Console
+              </span>
             </div>
             <div className="p-6 bg-black/40 min-h-[160px] font-mono text-sm overflow-auto">
               {output ? (
@@ -159,7 +189,9 @@ export default function Page() {
                   {output}
                 </pre>
               ) : (
-                <p className="text-muted-foreground/40 italic">Run your code to see the output here...</p>
+                <p className="text-muted-foreground/40 italic">
+                  Run your code to see the output here...
+                </p>
               )}
             </div>
           </div>
