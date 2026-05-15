@@ -1,150 +1,137 @@
-"use client"
-import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
+"use client";
+
+import React from "react";
+import { useRouter } from "next/navigation";
+import { 
+  Terminal, 
+  BarChart3, 
+  ArrowRight, 
+  Sparkles, 
+  Code2, 
+  Database,
+  TrendingUp,
+  BrainCircuit
+} from "lucide-react";
+import { motion } from "framer-motion";
 
 const Page = () => {
-  const router = useRouter()
-  const [selectedModule, setSelectedModule] = useState(null)
-  const [hoveredCard, setHoveredCard] = useState(null)
-  const modules = {
-    python: {
+  const router = useRouter();
+
+  const modules = [
+    {
+      id: "python",
       title: "Python Programming",
-      icon: "🐍",
-      color: "from-green-500 to-emerald-600",
-      bgColor: "hover:bg-green-50",
-      module: "python",
+      description: "Master Python programming from basics to advanced. Perfect for data science, web development, and automation.",
+      icon: Terminal,
+      color: "teal",
+      gradient: "from-teal-500 to-emerald-600",
+      features: ["Data Analysis", "Automation Scripts", "Machine Learning"]
     },
-    powerbi: {
+    {
+      id: "powerbi",
       title: "Power BI",
-      icon: "📊",
-      color: "from-yellow-500 to-orange-600",
-      bgColor: "hover:bg-yellow-50",
-      module: "powerbi",
+      description: "Learn business intelligence and data visualization. Create stunning dashboards and insightful reports.",
+      icon: BarChart3,
+      color: "yellow",
+      gradient: "from-yellow-500 to-orange-600",
+      features: ["Dashboard Design", "DAX Formulas", "Data Modeling"]
     }
-  }
+  ];
 
   const handleModuleSelect = (moduleType) => {
     router.push(`/ai-data-analyst/${moduleType}`);
-  }
-
-  const handleBackToCards = () => {
-    setSelectedModule(null)
-  }
+  };
 
   return (
-    <div className="min-h-screen p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-            Choose Your Learning Path
+    <div className="min-h-screen p-4 md:p-12 flex flex-col items-center justify-center relative overflow-hidden">
+
+      <div className="max-w-6xl w-full">
+        {/* Header Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-16 space-y-4"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center mx-auto mb-6"
+          >
+            <BrainCircuit className="text-teal-400 w-8 h-8" />
+          </motion.div>
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-500 bg-clip-text text-transparent">
+            AI Data Analyst Hub
           </h1>
-          <p className="text-gray-600 text-lg">Select a module to explore detailed courses</p>
+          <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto">
+            Choose your specialized path and leverage AI to transform your data analysis workflow.
+          </p>
+        </motion.div>
+
+        {/* Module Cards Grid */}
+        <div className="grid md:grid-cols-2 gap-8 px-4">
+          {modules.map((module, index) => (
+            <motion.div
+              key={module.id}
+              initial={{ opacity: 0, x: index === 0 ? -30 : 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              whileHover={{ y: -8 }}
+              className="group relative cursor-pointer"
+              onClick={() => handleModuleSelect(module.id)}
+            >
+              {/* Card Glow Effect */}
+              <div className={`absolute -inset-0.5 bg-gradient-to-r ${module.gradient} rounded-3xl opacity-0 group-hover:opacity-20 blur transition duration-500`} />
+              
+              <div className="relative glass-card p-8 md:p-10 rounded-3xl border border-white/5 flex flex-col h-full space-y-6">
+                <div className="flex justify-between items-start">
+                  <div className={`p-4 rounded-2xl bg-white/5 border border-white/10 group-hover:border-${module.color}-500/30 transition-colors`}>
+                    <module.icon className={`w-8 h-8 ${module.id === 'python' ? 'text-teal-400' : 'text-yellow-400'}`} />
+                  </div>
+                  <motion.div 
+                    animate={{ rotate: [0, 10, 0] }}
+                    transition={{ repeat: Infinity, duration: 4 }}
+                    className="p-2"
+                  >
+                    <Sparkles className="w-5 h-5 text-zinc-600 group-hover:text-white transition-colors" />
+                  </motion.div>
+                </div>
+
+                <div className="space-y-3">
+                  <h2 className="text-3xl font-bold text-white group-hover:bg-gradient-to-r from-white to-zinc-400 bg-clip-text group-hover:text-transparent transition-all">
+                    {module.title}
+                  </h2>
+                  <p className="text-zinc-400 leading-relaxed">
+                    {module.description}
+                  </p>
+                </div>
+
+                {/* Feature Tags */}
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {module.features.map(feature => (
+                    <span key={feature} className="px-3 py-1 bg-white/5 border border-white/5 rounded-full text-xs text-zinc-500 font-medium group-hover:border-white/10 group-hover:text-zinc-300 transition-colors">
+                      {feature}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="pt-6 mt-auto">
+                  <div className={`
+                    w-full py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all
+                    bg-white/5 border border-white/10 group-hover:bg-white/10 group-hover:border-white/20
+                  `}>
+                    Start Module
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
-        {!selectedModule ? (
-          // Two Cards View
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Python Card */}
-            <div
-              className={`group relative overflow-hidden rounded-2xl bg-white shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer ${modules.python.bgColor}`}
-              onMouseEnter={() => setHoveredCard('python')}
-              onMouseLeave={() => setHoveredCard(null)}
-              onClick={() => handleModuleSelect('python')}
-            >
-              <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${modules.python.color} rounded-bl-full opacity-20 group-hover:opacity-30 transition-opacity`}></div>
-              <div className="p-8">
-                <div className="text-7xl mb-4">{modules.python.icon}</div>
-                <h2 className="text-3xl font-bold text-gray-800 mb-3">{modules.python.title}</h2>
-                <p className="text-gray-600 mb-4">
-                  Master Python programming from basics to advanced. Perfect for data science, web development, and automation.
-                </p>
-                <div className="flex items-center justify-between">
-                
-                  <button onClick={() => handleModuleSelect('python')} className="px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all">
-                    Explore →
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Power BI Card */}
-            <div
-              className={`group relative overflow-hidden rounded-2xl bg-white shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer ${modules.powerbi.bgColor}`}
-              onMouseEnter={() => setHoveredCard('powerbi')}
-              onMouseLeave={() => setHoveredCard(null)}
-              onClick={() => handleModuleSelect('powerbi')}
-            >
-              <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${modules.powerbi.color} rounded-bl-full opacity-20 group-hover:opacity-30 transition-opacity`}></div>
-              <div className="p-8">
-                <div className="text-7xl mb-4">{modules.powerbi.icon}</div>
-                <h2 className="text-3xl font-bold text-gray-800 mb-3">{modules.powerbi.title}</h2>
-                <p className="text-gray-600 mb-4">
-                  Learn business intelligence and data visualization. Create stunning dashboards and insightful reports.
-                </p>
-                <div className="flex items-center justify-between">
-
-                  <button onClick={() => handleModuleSelect('powerbi')} className="px-6 py-2 bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all">
-                    Explore →
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          // Modules Detail View
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <button
-              onClick={handleBackToCards}
-              className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
-            >
-              ← Back to all modules
-            </button>
-            
-            <div className="mb-8">
-              <div className="text-5xl mb-2">{modules[selectedModule].icon}</div>
-              <h2 className="text-3xl font-bold text-gray-800">
-                {modules[selectedModule].title} Modules
-              </h2>
-              <p className="text-gray-600 mt-2">
-                Select a specific module to start learning
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {modules[selectedModule].modules.map((module) => (
-                <div
-                  key={module.id}
-                  className="border-2 border-gray-100 rounded-xl p-6 hover:border-blue-300 hover:shadow-lg transition-all cursor-pointer group"
-                >
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-                      {module.name}
-                    </h3>
-                    <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                      module.level === 'Beginner' ? 'bg-green-100 text-green-700' :
-                      module.level === 'Intermediate' ? 'bg-yellow-100 text-yellow-700' :
-                      'bg-red-100 text-red-700'
-                    }`}>
-                      {module.level}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-4 text-gray-600">
-                    <span className="flex items-center gap-1">
-                      ⏱️ {module.duration}
-                    </span>
-                  </div>
-                  <button className="mt-4 w-full py-2 bg-gray-50 text-gray-700 rounded-lg font-semibold group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:to-purple-600 group-hover:text-white transition-all">
-                    Select Module
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+    
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;
