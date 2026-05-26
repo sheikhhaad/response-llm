@@ -59,15 +59,19 @@ export default function UploadScreen() {
     "text/csv",
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "application/vnd.ms-excel",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "application/x-ipynb+json",
     "application/octet-stream",
+    "application/vnd.ms-powerbi",
+    "text/x-python",
+    "text/plain"
   ]);
 
   const ALLOWED_EXTENSIONS = {
     pdf: [".pdf"],
     dataset: [".csv", ".xlsx", ".xls"],
-    response: [".csv", ".xlsx", ".xls", ".docx", ".ipynb"],
+    response: isPython
+      ? [".ipynb", ".py"]
+      : [".pbix"],
   };
 
   const validateFile = (type, file) => {
@@ -169,7 +173,7 @@ export default function UploadScreen() {
         : "/solved-assignment/process-powerbi";
 
       const res = await api.post(endpoint, formData);
-
+      console.log(res.data);
       if (res.data.success) {
         setResult(res.data);
         setShowModal(true);
@@ -244,10 +248,10 @@ export default function UploadScreen() {
               />
 
               <FileBox
-                label="Draft Response"
-                subLabel="Upload initial work"
+                label={isPython ? "Python Notebook / Script" : "Power BI File"}
+                subLabel={isPython ? "Upload .ipynb or .py" : "Upload .pbix response"}
                 icon={FileCode}
-                accept=".csv,.xlsx,.xls,.docx,.ipynb"
+                accept={isPython ? ".ipynb,.py" : ".pbix"}
                 file={files.response}
                 error={errors.response}
                 onChange={(f) => handleFileChange("response", f)}
@@ -262,10 +266,9 @@ export default function UploadScreen() {
                 disabled={!isFormValid}
                 className={`
                   relative group px-10 py-4 rounded-2xl font-semibold text-lg transition-all
-                  ${
-                    isFormValid
-                      ? "bg-teal-600 text-white shadow-[0_0_20px_rgba(13,148,136,0.3)] hover:shadow-[0_0_30px_rgba(13,148,136,0.5)]"
-                      : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                  ${isFormValid
+                    ? "bg-teal-600 text-white shadow-[0_0_20px_rgba(13,148,136,0.3)] hover:shadow-[0_0_30px_rgba(13,148,136,0.5)]"
+                    : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
                   }
                 `}
               >
@@ -308,40 +311,58 @@ export default function UploadScreen() {
                 </div>
                 <h2 className="text-2xl font-bold">Analysis Complete!</h2>
                 <p className="text-zinc-400">
-                  Processed {result.questions_processed} questions successfully.
+                  {result.questions_processed !== undefined
+                    ? `Processed ${result.questions_processed} questions successfully.`
+                    : result.visuals_generated !== undefined
+                      ? `Generated ${result.visuals_generated} visuals successfully.`
+                      : "Processed successfully."}
                 </p>
               </div>
 
               <div className="space-y-3">
-                <a
-                  href={`${backendApi}${result?.download_urls?.notebook || ""}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-colors group"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-teal-500/20 rounded-lg">
-                      <FileCode className="text-teal-400 w-5 h-5" />
-                    </div>
-                    <span>Download Notebook</span>
-                  </div>
-                  <Download className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
-                </a>
+                {result?.download_urls && Object.entries(result.download_urls).map(([key, url]) => {
+                  if (!url) return null;
 
-                <a
-                  href={`${backendApi}${result?.download_urls?.summary || ""}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-colors group"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-500/20 rounded-lg">
-                      <FileText className="text-blue-400 w-5 h-5" />
-                    </div>
-                    <span>Download Summary</span>
-                  </div>
-                  <Download className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
-                </a>
+                  let label = "Download File";
+                  let IconComponent = FileText;
+                  let colorClass = "bg-teal-500/20 text-teal-400";
+
+                  if (key === "notebook") {
+                    label = "Download Notebook";
+                    IconComponent = FileCode;
+                    colorClass = "bg-teal-500/20 text-teal-400";
+                  } else if (key === "powerbi_response") {
+                    label = "Download Power BI File";
+                    IconComponent = Table2;
+                    colorClass = "bg-amber-500/20 text-amber-400";
+                  } else if (key === "summary") {
+                    label = "Download Summary";
+                    IconComponent = FileText;
+                    colorClass = "bg-blue-500/20 text-blue-400";
+                  } else if (key === "python_response") {
+                    label = "Download Python Response";
+                    IconComponent = FileCode;
+                    colorClass = "bg-teal-500/20 text-teal-400";
+                  }
+
+                  return (
+                    <a
+                      key={key}
+                      href={`${backendApi}${url}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-colors group"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 ${colorClass} rounded-lg`}>
+                          <IconComponent className="w-5 h-5" />
+                        </div>
+                        <span>{label}</span>
+                      </div>
+                      <Download className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
+                    </a>
+                  );
+                })}
               </div>
 
               <button
@@ -474,11 +495,10 @@ function ProcessingState({ steps, activeStep, onCancel }) {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
-              className={`flex items-center gap-4 p-4 rounded-2xl border transition-all ${
-                isActive
-                  ? "bg-teal-500/10 border-teal-500/30"
-                  : "border-white/5 opacity-50"
-              }`}
+              className={`flex items-center gap-4 p-4 rounded-2xl border transition-all ${isActive
+                ? "bg-teal-500/10 border-teal-500/30"
+                : "border-white/5 opacity-50"
+                }`}
             >
               <div
                 className={`p-2 rounded-lg ${isCompleted ? "bg-green-500/20 text-green-500" : isActive ? "bg-teal-500/20 text-teal-500" : "bg-white/5 text-zinc-500"}`}

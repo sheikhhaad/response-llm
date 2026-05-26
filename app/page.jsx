@@ -2,73 +2,66 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   ArrowRight,
-  Mail,
-  User,
-  CreditCard,
-  Phone,
-  CheckSquare,
+  Lock,
+  Hash,
+  Eye,
+  EyeOff,
+  AlertCircle,
 } from "lucide-react";
-import { PageTransition } from "./components/PageTransition";
-import axios from "axios";
 import api from "@/lib/api";
+import { PageTransition } from "./components/PageTransition";
 
-export default function EntryScreen() {
+export default function LoginScreen() {
   const router = useRouter();
+  const [studentId, setStudentId] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isChecked, setIsChecked] = useState(false); // State for checkbox
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    cnic: "",
-    phone: "",
-    password: "",
-  });
+  const [error, setError] = useState("");
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prev) => ({ ...prev, [id]: value }));
-  };
-
-  const handleCheckboxChange = (e) => {
-    setIsChecked(e.target.checked);
+  const handleStudentIdChange = (e) => {
+    // Only allow numeric input for roll number
+    const val = e.target.value.replace(/\D/g, "");
+    setStudentId(val);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    const { name, email, cnic, phone, password } = formData;
-
-    // Set shazaib_student based on checkbox
-    const shazaib_student = isChecked;
-
-    // validation
-    if (!name || !email || !cnic || !phone || !password) {
-      alert("Please fill in all fields.");
+    if (!studentId) {
+      setError("Please enter your Student ID.");
       return;
     }
 
-    if (!shazaib_student) {
-      alert("Please confirm that you are a Shazaib student.");
+    if (!password) {
+      setError("Please enter your password.");
       return;
     }
-
-    const rollNumber = Math.floor(Math.random() * 1000000);
 
     try {
       setIsSubmitting(true);
 
-      const res = await api.post("/auth/register", {
-        ...formData,
+      // Roll numbers are stored as numbers on the backend
+      const rollNumber = parseInt(studentId, 10);
+
+      const res = await api.post("/auth/login", {
         rollNumber,
-        shazaib_student, // Send checkbox value
+        password,
       });
 
+      // Redirect to dashboard on success
       router.push("/dashboard");
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong. Please try again.");
+    } catch (err) {
+      console.error("Login error:", err);
+      const errorMsg =
+        err.response?.data?.msg ||
+        err.response?.data?.message ||
+        "Invalid Student ID or Password. Please try again.";
+      setError(errorMsg);
     } finally {
       setIsSubmitting(false);
     }
@@ -82,172 +75,84 @@ export default function EntryScreen() {
       >
         <div className="text-center space-y-2">
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500/20 text-brand-400 mb-2">
-            <ArrowRight size={24} className="-rotate-45" />
+            <Lock size={22} />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">
-            Welcome Back
+          <h1 className="text-3xl font-bold tracking-tight text-white font-sans">
+            Student Login
           </h1>
           <p className="text-sm text-zinc-400">
-            Enter your details to access the workspace.
+            Enter your Student ID and password to access the portal.
           </p>
         </div>
 
+        {error && (
+          <div className="flex items-center gap-3 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400 text-sm">
+            <AlertCircle size={18} className="shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-4">
-            {/* Name Field */}
+            {/* Student ID / Roll Number Field */}
             <div className="relative">
-              <label htmlFor="name" className="sr-only">
-                Full Name
+              <label htmlFor="studentId" className="sr-only">
+                Student ID / Roll Number
               </label>
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-500">
-                <User size={18} />
+                <Hash size={18} />
               </div>
               <input
-                id="name"
+                id="studentId"
                 type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 required
-                autoComplete="name"
                 className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl py-3 pl-11 pr-4
                            text-white placeholder-zinc-500 focus:outline-none focus:ring-2
                            focus:ring-brand-500/50 focus:border-brand-500 transition-all"
-                placeholder="Full Name"
-                value={formData.name}
-                onChange={handleChange}
-              />
-            </div>
-
-            {/* CNIC Field */}
-            <div className="relative">
-              <label htmlFor="cnic" className="sr-only">
-                CNIC Number
-              </label>
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-500">
-                <CreditCard size={18} />
-              </div>
-              <input
-                id="cnic"
-                type="text"
-                required
-                placeholder="CNIC (e.g., 3520212345678)"
-                className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl py-3 pl-11 pr-4
-                           text-white placeholder-zinc-500 focus:outline-none focus:ring-2
-                           focus:ring-brand-500/50 focus:border-brand-500 transition-all"
-                value={formData.cnic}
-                onChange={handleChange}
-                onBlur={(e) => {
-                  const raw = e.target.value.replace(/\D/g, "");
-                  if (raw.length === 13) {
-                    const formatted = `${raw.slice(0, 5)}-${raw.slice(5, 12)}-${raw.slice(12)}`;
-                    setFormData((prev) => ({ ...prev, cnic: formatted }));
-                  }
-                }}
-              />
-            </div>
-
-            {/* Contact Field */}
-            <div className="relative">
-              <label htmlFor="phone" className="sr-only">
-                Contact Number
-              </label>
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-500">
-                <Phone size={18} />
-              </div>
-              <input
-                id="phone"
-                type="tel"
-                required
-                placeholder="Mobile (e.g., 03001234567)"
-                className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl py-3 pl-11 pr-4
-                           text-white placeholder-zinc-500 focus:outline-none focus:ring-2
-                           focus:ring-brand-500/50 focus:border-brand-500 transition-all"
-                value={formData.phone}
-                onChange={handleChange}
-                onBlur={(e) => {
-                  const raw = e.target.value.replace(/\D/g, "");
-                  if (raw.length === 11 && raw.startsWith("03")) {
-                    const formatted = `${raw.slice(0, 4)}-${raw.slice(4)}`;
-                    setFormData((prev) => ({ ...prev, phone: formatted }));
-                  }
-                }}
-              />
-            </div>
-
-            {/* Email Field */}
-            <div className="relative">
-              <label htmlFor="email" className="sr-only">
-                Email Address
-              </label>
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-500">
-                <Mail size={18} />
-              </div>
-              <input
-                id="email"
-                type="email"
-                required
-                autoComplete="email"
-                className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl py-3 pl-11 pr-4
-                           text-white placeholder-zinc-500 focus:outline-none focus:ring-2
-                           focus:ring-brand-500/50 focus:border-brand-500 transition-all"
-                placeholder="Email Address"
-                value={formData.email}
-                onChange={handleChange}
+                placeholder="Student ID (e.g. 123456)"
+                value={studentId}
+                onChange={handleStudentIdChange}
               />
             </div>
 
             {/* Password Field */}
             <div className="relative">
               <label htmlFor="password" className="sr-only">
-                Create Password
+                Password
               </label>
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-500">
-                <User size={18} />
+                <Lock size={18} />
               </div>
               <input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
-                autoComplete="new-password"
-                className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl py-3 pl-11 pr-4
+                className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl py-3 pl-11 pr-12
                            text-white placeholder-zinc-500 focus:outline-none focus:ring-2
                            focus:ring-brand-500/50 focus:border-brand-500 transition-all"
-                placeholder="Create new Password"
-                value={formData.password}
-                onChange={handleChange}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
-            </div>
-
-            {/* Checkbox Field */}
-            <div className="flex items-start gap-3 pt-2">
-              <div className="relative flex items-center">
-                <input
-                  type="checkbox"
-                  id="shazaib_student"
-                  checked={isChecked}
-                  onChange={handleCheckboxChange}
-                  className="w-5 h-5 rounded border-zinc-600 bg-zinc-800 
-                           text-brand-500 focus:ring-brand-500 focus:ring-2 
-                           focus:ring-offset-0 focus:ring-offset-transparent
-                           cursor-pointer"
-                />
-              </div>
-              <label
-                htmlFor="shazaib_student"
-                className="text-sm text-zinc-300 cursor-pointer select-none"
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-zinc-500 hover:text-zinc-300 transition-colors"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                I confirm that I am a{" "}
-                <span className="text-brand-400 font-semibold">
-                  Shazaib Student
-                </span>
-              </label>
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
           </div>
 
           <button
             type="submit"
-            disabled={isSubmitting || !isChecked} // Button disabled until checkbox is checked
+            disabled={isSubmitting}
             className="w-full py-3 px-4 bg-brand-500 hover:bg-brand-400 text-brand-950
                        font-semibold rounded-xl flex items-center justify-center gap-2
-                       transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                       transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {isSubmitting ? (
               <>
@@ -271,21 +176,31 @@ export default function EntryScreen() {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                <span>Processing...</span>
+                <span>Logging in...</span>
               </>
             ) : (
               <>
-                <span>Continue</span>
+                <span>Login</span>
                 <ArrowRight size={18} />
               </>
             )}
           </button>
         </form>
 
-        {/* Optional small note */}
-        <p className="text-xs text-center text-zinc-500">
-          Your information is secure and will only be used for verification.
-        </p>
+        <div className="flex flex-col items-center gap-2 text-sm text-zinc-400 text-center">
+          <p>
+            Don't have an account?{" "}
+            <Link
+              href="/register"
+              className="text-brand-400 hover:text-brand-300 font-semibold transition-colors underline underline-offset-4 decoration-zinc-800 hover:decoration-brand-300"
+            >
+              Register here
+            </Link>
+          </p>
+          <p className="text-xs text-zinc-500 mt-2">
+            Your information is secure and encrypted.
+          </p>
+        </div>
       </div>
     </PageTransition>
   );
