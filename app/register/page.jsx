@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import api from "@/lib/api";
 import { PageTransition } from "../components/PageTransition";
+import { LoadingButton } from "../components/Loading";
 
 export default function EntryScreen() {
   const router = useRouter();
@@ -243,44 +244,16 @@ export default function EntryScreen() {
             </div>
           </div>
 
-          <button
+          <LoadingButton
             type="submit"
-            disabled={isSubmitting || !isChecked} // Button disabled until checkbox is checked
-            className="w-full py-3 px-4 bg-brand-500 hover:bg-brand-400 text-brand-950
-                       font-semibold rounded-xl flex items-center justify-center gap-2
-                       transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            isLoading={isSubmitting}
+            loadingText="Processing..."
+            disabled={!isChecked}
+            className="w-full py-3 px-4 bg-brand-500 hover:bg-brand-400 text-brand-950 font-semibold rounded-xl"
           >
-            {isSubmitting ? (
-              <>
-                <svg
-                  className="animate-spin h-5 w-5 text-brand-950"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                <span>Processing...</span>
-              </>
-            ) : (
-              <>
-                <span>Continue</span>
-                <ArrowRight size={18} />
-              </>
-            )}
-          </button>
+            <span>Continue</span>
+            <ArrowRight size={18} />
+          </LoadingButton>
         </form>
 
         <div className="flex flex-col items-center gap-2 text-sm text-zinc-400 text-center">

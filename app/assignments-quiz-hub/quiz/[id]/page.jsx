@@ -2,6 +2,7 @@
 import api from "@/app/utils/api";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { LoadingButton, LoadingScreen } from "@/app/components/Loading";
 import {
   BookOpen,
   FileText,
@@ -17,6 +18,7 @@ const Page = () => {
 
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [result, setResult] = useState(null);
 
@@ -60,20 +62,21 @@ const Page = () => {
     const payload = { answers };
 
     try {
+      setSubmitting(true);
       const res = await api.post(`/quiz/${id}/submit`, payload);
       setResult(res.data);
     } catch (error) {
       console.log(error.response?.data);
+      alert(error.response?.data?.message || error.response?.data?.detail || "Submission failed. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500 mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading quiz details...</p>
-        </div>
+        <LoadingScreen message="Loading quiz details..." />
       </div>
     );
   }
@@ -236,16 +239,18 @@ const Page = () => {
 
             {/* Submit Button */}
             <div className="pt-6">
-              <button
+              <LoadingButton
                 onClick={handleSubmit}
+                isLoading={submitting}
+                loadingText="Submitting Quiz..."
                 disabled={
                   Object.keys(selectedAnswers).length <
                   (quiz.questions?.length || 0)
                 }
-                className="w-full py-4 bg-brand-500 text-white font-extrabold text-lg rounded-2xl shadow-xl shadow-brand-500/20 hover:bg-brand-600 transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="w-full py-4 bg-brand-500 hover:bg-brand-600 text-white font-extrabold text-lg rounded-2xl shadow-xl shadow-brand-500/20 hover:scale-[1.02] active:scale-95 disabled:opacity-50"
               >
                 Submit Quiz
-              </button>
+              </LoadingButton>
               <p className="text-center text-muted-foreground text-sm mt-4">
                 Make sure you've answered all {quiz.questions?.length}{" "}
                 questions.

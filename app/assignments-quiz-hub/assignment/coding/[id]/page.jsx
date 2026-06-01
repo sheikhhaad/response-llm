@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import api from "@/app/utils/api";
+import { LoadingButton, LoadingScreen } from "@/app/components/Loading";
 import {
   Play,
   ChevronLeft,
@@ -74,12 +75,7 @@ export default function Page() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 text-brand-500 animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">
-            Loading assignment environment...
-          </p>
-        </div>
+        <LoadingScreen message="Loading assignment environment..." />
       </div>
     );
   }
@@ -143,18 +139,15 @@ export default function Page() {
                   main.py
                 </span>
               </div>
-              <button
+              <LoadingButton
                 onClick={handleRun}
-                disabled={running}
-                className="flex items-center gap-2 px-6 py-2 bg-brand-500 text-white text-sm font-bold rounded-lg hover:bg-brand-600 transition-all active:scale-95 disabled:opacity-50"
+                isLoading={running}
+                loadingText="Running..."
+                className="flex items-center gap-2 px-6 py-2 bg-brand-500 hover:bg-brand-600 text-white text-sm font-bold rounded-lg"
               >
-                {running ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Play className="w-4 h-4 fill-current" />
-                )}
-                {running ? "Running..." : "Run Code"}
-              </button>
+                <Play className="w-4 h-4 fill-current inline-block" />
+                <span>Run Code</span>
+              </LoadingButton>
             </div>
 
             <div className="relative group">
